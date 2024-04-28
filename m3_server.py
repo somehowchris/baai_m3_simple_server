@@ -10,19 +10,36 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 import pydantic_numpy.typing as pnd
-import torch
+import argparse
 
-batch_size = 128  # gpu batch_size in order of your available vram
-max_request = 10  # max request for future improvements on api calls / gpu batches (for now is pretty basic)
-max_length = 8192  # max context length for embeddings and passages in re-ranker
-max_q_length = 8192  # max context length for questions in re-ranker
-request_flush_timeout = 0.1  # flush time out for future improvements on api calls / gpu batches (for now is pretty basic)
-rerank_weights = [0.4, 0.2, 0.4]  # re-rank score weights
-request_time_out = 30  # Timeout threshold
-gpu_time_out = 10  # gpu processing timeout threshold
-port = 3000
-device = "cuda" if torch.cuda.is_available() else "cpu"
-compile = False  # Compile the model for faster inference
+# Set up command line argument parsing
+parser = argparse.ArgumentParser(description="Run the FastAPI server for embeddings and re-ranking")
+parser.add_argument('--batch_size', type=int, default=128, help='GPU batch size')
+parser.add_argument('--max_request', type=int, default=10, help='Maximum number of requests to process')
+parser.add_argument('--max_length', type=int, default=8192, help='Maximum context length for embeddings and passages')
+parser.add_argument('--max_q_length', type=int, default=8192, help='Maximum context length for questions')
+parser.add_argument('--request_flush_timeout', type=float, default=0.1, help='Request flush timeout')
+parser.add_argument('--rerank_weights', type=float, nargs=3, default=[0.4, 0.2, 0.4], help='Re-rank score weights')
+parser.add_argument('--request_time_out', type=int, default=30, help='Request timeout threshold')
+parser.add_argument('--gpu_time_out', type=int, default=10, help='GPU processing timeout threshold')
+parser.add_argument('--port', type=int, default=3000, help='Port to run the server on')
+parser.add_argument('--device', type=str, default="cuda" if torch.cuda.is_available() else "cpu", help='Device to run the model on')
+parser.add_argument('--compile', action='store_true', help='Whether to compile the model for faster inference')
+
+args = parser.parse_args()
+
+# Use the parsed arguments
+batch_size = args.batch_size
+max_request = args.max_request
+max_length = args.max_length
+max_q_length = args.max_q_length
+request_flush_timeout = args.request_flush_timeout
+rerank_weights = args.rerank_weights
+request_time_out = args.request_time_out
+gpu_time_out = args.gpu_time_out
+port = args.port
+device = args.device
+compile = args.compile
 
 
 class m3Wrapper:
