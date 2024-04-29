@@ -11,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 import pydantic_numpy.typing as pnd
 import argparse
+import torch
 
 # Set up command line argument parsing
 parser = argparse.ArgumentParser(description="Run the FastAPI server for embeddings and re-ranking")
