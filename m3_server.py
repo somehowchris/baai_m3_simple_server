@@ -238,9 +238,3 @@ async def get_embeddings(request: EmbedRequest):
 async def rerank(request: RerankRequest):
     scores = await app.processor.process_request(request, "rerank")
     return RerankResponse(scores=scores)
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=port, workers=32, reload=False)
