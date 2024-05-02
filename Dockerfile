@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 
 # Run m3_server.py when the container launches
-CMD ["python", "m3_server.py"]
+CMD ["uvicorn", "m3_server:app", "--workers", "128", "--host", "0.0.0.0", "--port", "3000"]

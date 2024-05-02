@@ -26,8 +26,12 @@ parser.add_argument('--gpu_time_out', type=int, default=10, help='GPU processing
 parser.add_argument('--port', type=int, default=3000, help='Port to run the server on')
 parser.add_argument('--device', type=str, default="cuda" if torch.cuda.is_available() else "cpu", help='Device to run the model on')
 parser.add_argument('--compile', action='store_true', help='Whether to compile the model for faster inference')
+# workers
+parser.add_argument('--workers', type=int, default=32, help='Number of workers to run the server on')
+# host
+parser.add_argument('--host', type=str, default="0.0.0.0")
 
-args = parser.parse_args()
+args, unknown = parser.parse_known_args()
 
 # Use the parsed arguments
 batch_size = args.batch_size
