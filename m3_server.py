@@ -204,8 +204,8 @@ class RequestProcessor:
 app = FastAPI()
 
 # Initialize the model and request processor
-model = m3Wrapper("BAAI/bge-m3", device=device, compile=compile)
-processor = RequestProcessor(
+app.model = m3Wrapper("BAAI/bge-m3", device=device, compile=compile)
+app.processor = RequestProcessor(
     model, accumulation_timeout=request_flush_timeout, max_request_to_flush=max_request
 )
 
@@ -230,13 +230,13 @@ async def timeout_middleware(request: Request, call_next):
 
 @app.post("/embeddings/", response_model=EmbedResponse)
 async def get_embeddings(request: EmbedRequest):
-    embeddings = await processor.process_request(request, "embed")
+    embeddings = await app.processor.process_request(request, "embed")
     return EmbedResponse(embeddings=embeddings)
 
 
 @app.post("/rerank/", response_model=RerankResponse)
 async def rerank(request: RerankRequest):
-    scores = await processor.process_request(request, "rerank")
+    scores = await app.processor.process_request(request, "rerank")
     return RerankResponse(scores=scores)
 
 
