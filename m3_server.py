@@ -206,7 +206,7 @@ app = FastAPI()
 # Initialize the model and request processor
 app.model = m3Wrapper("BAAI/bge-m3", device=device, compile=compile)
 app.processor = RequestProcessor(
-    model, accumulation_timeout=request_flush_timeout, max_request_to_flush=max_request
+    app.model, accumulation_timeout=request_flush_timeout, max_request_to_flush=max_request
 )
 
 
